@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="16 14 350 132" width="525" height="198">
+  <defs>
+    <style>text { font-synthesis: none; }</style>
+  </defs>
+  <circle cx="80" cy="80" r="62" fill="none" stroke="#9FE1CB" stroke-width="0.6" opacity="0.22"/>
+  <circle cx="80" cy="80" r="47" fill="none" stroke="#9FE1CB" stroke-width="0.8" opacity="0.35"/>
+  <circle cx="80" cy="80" r="32" fill="none" stroke="#9FE1CB" stroke-width="1.0" opacity="0.68"/>
+  <g stroke="#9FE1CB" stroke-linecap="round" opacity="0.58">
+    <line x1="80"    y1="50"    x2="80"    y2="55.5"  stroke-width="1.6"/>
+    <line x1="96"    y1="53.8"  x2="93.3"  y2="58.5"  stroke-width="1.2"/>
+    <line x1="107.3" y1="63.7"  x2="103.8" y2="67.1"  stroke-width="1.2"/>
+    <line x1="112"   y1="80"    x2="106.5" y2="80"    stroke-width="1.6"/>
+    <line x1="107.3" y1="96.3"  x2="103.8" y2="92.9"  stroke-width="1.2"/>
+    <line x1="96"    y1="106.2" x2="93.3"  y2="101.5" stroke-width="1.2"/>
+    <line x1="80"    y1="110"   x2="80"    y2="104.5" stroke-width="1.6"/>
+    <line x1="64"    y1="106.2" x2="66.7"  y2="101.5" stroke-width="1.2"/>
+    <line x1="52.7"  y1="96.3"  x2="56.2"  y2="92.9"  stroke-width="1.2"/>
+    <line x1="48"    y1="80"    x2="53.5"  y2="80"    stroke-width="1.6"/>
+    <line x1="52.7"  y1="63.7"  x2="56.2"  y2="67.1"  stroke-width="1.2"/>
+    <line x1="64"    y1="53.8"  x2="66.7"  y2="58.5"  stroke-width="1.2"/>
+  </g>
+  <line x1="80" y1="80" x2="80"  y2="52" stroke="#9FE1CB" stroke-width="1.2" stroke-linecap="round" opacity="0.72"/>
+  <line x1="80" y1="80" x2="107" y2="80" stroke="#9FE1CB" stroke-width="2.4" stroke-linecap="round" opacity="0.72"/>
+  <circle cx="80" cy="80" r="2.5" fill="#9FE1CB" opacity="0.82"/>
+  <path d="M 46 102 Q 80 120 114 102" fill="none" stroke="#9FE1CB" stroke-width="0.9" stroke-dasharray="3 4.5" stroke-linecap="round" opacity="0.38"/>
+  <text x="162" y="74" text-anchor="start"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-weight="400" font-size="52" letter-spacing="0.12em"
+        fill="#9FE1CB">SAMA</text>
+  <line x1="162" y1="86" x2="362" y2="86"
+        stroke="#9FE1CB" stroke-width="0.5" opacity="0.35"/>
+  <text x="163" y="113" text-anchor="start"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-weight="400" font-size="20" letter-spacing="0.44em"
+        fill="#9FE1CB" opacity="0.72">TIMER</text>
+</svg>

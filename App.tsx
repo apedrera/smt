@@ -1,20 +1,61 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import './src/polyfills';
+import React, { useEffect, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StyleSheet } from 'react-native';
+import { AppProvider, useApp } from '@/contexts/AppContext';
+import { AppNavigator } from '@/navigation/AppNavigator';
+import { OnboardingScreen } from '@/screens/OnboardingScreen';
+import { LoadingScreen } from '@/components/LoadingScreen';
+import { initDatabase } from '@/db/database';
+
+function AppInner() {
+  const { settings, isLoaded } = useApp();
+  const [dbReady, setDbReady] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    initDatabase()
+      .then(() => setDbReady(true))
+      .catch(e => {
+        console.error('DB init failed:', e);
+        setDbReady(true);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded && !settings.hasSeenOnboarding) {
+      setShowOnboarding(true);
+    } else if (isLoaded && settings.hasSeenOnboarding) {
+      setShowOnboarding(false);
+    }
+  }, [isLoaded, settings.hasSeenOnboarding]);
+
+  if (!isLoaded || !dbReady) {
+    return <LoadingScreen />;
+  }
+
+  if (showOnboarding) {
+    return <OnboardingScreen onDone={() => setShowOnboarding(false)} />;
+  }
+
+  return <AppNavigator />;
+}
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <GestureHandlerRootView style={styles.root}>
+      <SafeAreaProvider>
+        <AppProvider>
+          <AppInner />
+        </AppProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
