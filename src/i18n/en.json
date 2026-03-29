@@ -144,7 +144,7 @@
   },
   "donations": {
     "title": "Support the App",
-    "subtitle": "SAMA Timer is free, ad-free, and open source.\nIf it helps your practice, consider supporting its development.",
+    "subtitle": "SAMA Timer is free and ad-free.\nIf it helps your practice, consider supporting its development.",
     "kofiPaypal": "Ko-fi / PayPal",
     "googlePlay": "One-time purchase",
     "crypto": "Crypto",
@@ -163,7 +163,7 @@
     "version": "Version",
     "author": "Author",
     "privacyPolicy": "Privacy Policy",
-    "openSource": "This app is free and open source. No ads. No tracking.",
+    "openSource": "Free app. No ads. No tracking.",
     "authorName": "Karl Banor",
     "pp": {
       "s1title": "No data collection",

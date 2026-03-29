@@ -144,7 +144,7 @@
   },
   "donations": {
     "title": "Apoyar la App",
-    "subtitle": "SAMA Timer es gratuita, sin anuncios y de código abierto.\nSi ayuda a tu práctica, considera apoyar su desarrollo.",
+    "subtitle": "SAMA Timer es gratuita y sin anuncios.\nSi ayuda a tu práctica, considera apoyar su desarrollo.",
     "kofiPaypal": "Ko-fi / PayPal",
     "googlePlay": "Compra única",
     "crypto": "Cripto",
@@ -163,7 +163,7 @@
     "version": "Versión",
     "author": "Autor",
     "privacyPolicy": "Política de Privacidad",
-    "openSource": "Esta app es gratuita y de código abierto. Sin anuncios. Sin rastreo.",
+    "openSource": "App gratuita. Sin anuncios. Sin rastreo.",
     "authorName": "Karl Banor",
     "pp": {
       "s1title": "Sin recopilación de datos",
