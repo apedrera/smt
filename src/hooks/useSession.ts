@@ -198,8 +198,12 @@ export function useSession() {
     [fireSessionStart, tick]
   );
 
+  const pausedFromPhaseRef = useRef<'warmup' | 'running' | null>(null);
+
   const pause = useCallback(() => {
-    if (phaseRef.current !== 'running') return;
+    const phase = phaseRef.current;
+    if (phase !== 'running' && phase !== 'warmup') return;
+    pausedFromPhaseRef.current = phase;
     pausedAtRef.current = Date.now();
     phaseRef.current = 'paused';
     stopTicker();
@@ -208,6 +212,20 @@ export function useSession() {
 
   const resume = useCallback(() => {
     if (phaseRef.current !== 'paused') return;
+    const resumingFrom = pausedFromPhaseRef.current;
+    pausedFromPhaseRef.current = null;
+
+    if (resumingFrom === 'warmup' && warmupStartRef.current) {
+      // Shift warmupStart forward by the time spent paused
+      const pausedDuration = pausedAtRef.current ? Date.now() - pausedAtRef.current : 0;
+      warmupStartRef.current += pausedDuration;
+      pausedAtRef.current = null;
+      phaseRef.current = 'warmup';
+      setState(prev => ({ ...prev, phase: 'warmup' }));
+      tickRef.current = setInterval(tick, 1000);
+      return;
+    }
+
     if (pausedAtRef.current) {
       totalPausedMsRef.current += Date.now() - pausedAtRef.current;
       pausedAtRef.current = null;
@@ -215,7 +233,6 @@ export function useSession() {
     // Recalculate next interval relative to accumulated pauses
     const cfg = configRef.current;
     if (cfg && cfg.intervalSeconds > 0 && sessionStartRef.current) {
-      const elapsed = computeElapsed();
       const intervalsAlreadyFired = bellsFiredRef.current;
       nextIntervalAtRef.current =
         sessionStartRef.current +

@@ -4,7 +4,6 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -13,6 +12,7 @@ import { useApp } from '@/contexts/AppContext';
 import { GradientBackground } from '@/components/GradientBackground';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
+import { ConfirmModal } from '@/components/ConfirmModal';
 import { getAllPresets, deletePreset, Preset } from '@/db/presets';
 import { PresetsStackParamList } from '@/navigation/types';
 import { i18n } from '@/i18n';
@@ -23,6 +23,7 @@ export function PresetsScreen() {
   const { colors } = useApp();
   const navigation = useNavigation<PresetsNav>();
   const [presets, setPresets] = useState<Preset[]>([]);
+  const [pendingDelete, setPendingDelete] = useState<Preset | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -30,22 +31,11 @@ export function PresetsScreen() {
     }, [])
   );
 
-  const handleDelete = (preset: Preset) => {
-    Alert.alert(
-      i18n.t('common.confirm'),
-      i18n.t('presets.deleteConfirm'),
-      [
-        { text: i18n.t('common.cancel'), style: 'cancel' },
-        {
-          text: i18n.t('common.delete'),
-          style: 'destructive',
-          onPress: async () => {
-            await deletePreset(preset.id);
-            setPresets(prev => prev.filter(p => p.id !== preset.id));
-          },
-        },
-      ]
-    );
+  const doDelete = async () => {
+    if (!pendingDelete) return;
+    await deletePreset(pendingDelete.id);
+    setPresets(prev => prev.filter(p => p.id !== pendingDelete.id));
+    setPendingDelete(null);
   };
 
   const renderItem = ({ item }: { item: Preset }) => (
@@ -82,7 +72,7 @@ export function PresetsScreen() {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.deleteBtn}
-        onPress={() => handleDelete(item)}
+        onPress={() => setPendingDelete(item)}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       >
         <ThemedText style={{ color: colors.danger, fontSize: 18 }}>✕</ThemedText>
@@ -128,6 +118,17 @@ export function PresetsScreen() {
           style={styles.addBtn}
         />
       </View>
+
+      <ConfirmModal
+        visible={pendingDelete !== null}
+        title={i18n.t('common.confirm')}
+        message={i18n.t('presets.deleteConfirm')}
+        confirmLabel={i18n.t('common.delete')}
+        cancelLabel={i18n.t('common.cancel')}
+        destructive
+        onConfirm={doDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </GradientBackground>
   );
 }

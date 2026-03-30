@@ -5,7 +5,6 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  Alert,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
@@ -15,6 +14,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useApp } from '@/contexts/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
+import { ConfirmModal } from '@/components/ConfirmModal';
 import { getSessionById, updateSession, deleteSession, Session } from '@/db/sessions';
 import { formatDuration, formatDate, formatTime } from '@/utils/formatters';
 import { JournalStackParamList } from '@/navigation/types';
@@ -34,6 +34,8 @@ export function JournalDetailScreen() {
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [showSaveError, setShowSaveError] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -46,28 +48,15 @@ export function JournalDetailScreen() {
     });
   }, [sessionId]);
 
-  const handleDelete = () => {
-    Alert.alert(
-      i18n.t('common.deleteEntry'),
-      i18n.t('common.deleteEntryMsg'),
-      [
-        { text: i18n.t('common.cancel'), style: 'cancel' },
-        {
-          text: i18n.t('common.delete'),
-          style: 'destructive',
-          onPress: async () => {
-            setDeleting(true);
-            try {
-              await deleteSession(session!.id);
-              navigation.goBack();
-            } catch {
-              Alert.alert('Error', 'Failed to delete session.');
-              setDeleting(false);
-            }
-          },
-        },
-      ]
-    );
+  const doDelete = async () => {
+    setDeleting(true);
+    setShowDelete(false);
+    try {
+      await deleteSession(session!.id);
+      navigation.goBack();
+    } catch {
+      setDeleting(false);
+    }
   };
 
   const handleSave = async () => {
@@ -80,7 +69,7 @@ export function JournalDetailScreen() {
       });
       navigation.goBack();
     } catch (e) {
-      Alert.alert('Error', 'Failed to save changes.');
+      setShowSaveError(true);
     } finally {
       setSaving(false);
     }
@@ -181,12 +170,30 @@ export function JournalDetailScreen() {
           <Button
             label={i18n.t('common.deleteEntry')}
             variant="danger"
-            onPress={handleDelete}
+            onPress={() => setShowDelete(true)}
             loading={deleting}
           />
         </View>
       </ScrollView>
       </KeyboardAvoidingView>
+
+      <ConfirmModal
+        visible={showDelete}
+        title={i18n.t('common.deleteEntry')}
+        message={i18n.t('common.deleteEntryMsg')}
+        confirmLabel={i18n.t('common.delete')}
+        cancelLabel={i18n.t('common.cancel')}
+        destructive
+        onConfirm={doDelete}
+        onCancel={() => setShowDelete(false)}
+      />
+      <ConfirmModal
+        visible={showSaveError}
+        title="Error"
+        message="Failed to save changes."
+        confirmLabel={i18n.t('common.ok')}
+        onConfirm={() => setShowSaveError(false)}
+      />
     </GradientBackground>
   );
 }

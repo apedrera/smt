@@ -4,12 +4,12 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Alert,
   Modal,
   Pressable,
   ActionSheetIOS,
   Platform,
 } from 'react-native';
+import { ConfirmModal } from '@/components/ConfirmModal';
 import { GradientBackground } from '@/components/GradientBackground';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -31,6 +31,7 @@ export function JournalListScreen() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [exporting, setExporting] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [showExportError, setShowExportError] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -68,7 +69,7 @@ export function JournalListScreen() {
       else if (idx === 1) await exportAsJson(sessions);
       else if (idx === 2) await exportAsXlsx(sessions);
     } catch {
-      Alert.alert(i18n.t('export.error'));
+      setShowExportError(true);
     } finally {
       setExporting(false);
     }
@@ -202,6 +203,13 @@ export function JournalListScreen() {
           </>
         )}
       </View>
+      <ConfirmModal
+        visible={showExportError}
+        title={i18n.t('export.error')}
+        message={i18n.t('export.error')}
+        confirmLabel={i18n.t('common.ok')}
+        onConfirm={() => setShowExportError(false)}
+      />
     </GradientBackground>
   );
 }

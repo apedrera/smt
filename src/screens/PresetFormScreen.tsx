@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
-  Alert,
   BackHandler,
 } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -15,6 +14,7 @@ import { useApp } from '@/contexts/AppContext';
 import { GradientBackground } from '@/components/GradientBackground';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
+import { ConfirmModal } from '@/components/ConfirmModal';
 import { BellSelector } from '@/components/BellSelector';
 import { WheelPicker } from '@/components/WheelPicker';
 import { getPresetById, insertPreset, updatePreset } from '@/db/presets';
@@ -44,21 +44,14 @@ export function PresetFormScreen() {
   const [intervalBell, setIntervalBell] = useState<string | null>(null);
   const [endingBell, setEndingBell]     = useState<string | null>('bell_1');
   const [saving, setSaving] = useState(false);
+  const [showUnsaved, setShowUnsaved] = useState(false);
   const isDirty = useRef(false);
 
   const markDirty = () => { isDirty.current = true; };
 
   const confirmBack = () => {
     if (!isDirty.current) { navigation.goBack(); return; }
-    Alert.alert(
-      i18n.t('common.unsavedChanges'),
-      i18n.t('common.unsavedChangesMsg'),
-      [
-        { text: i18n.t('common.cancel'), style: 'cancel' },
-        { text: i18n.t('common.discard'), style: 'destructive', onPress: () => navigation.goBack() },
-        { text: i18n.t('common.save'), onPress: handleSave },
-      ]
-    );
+    setShowUnsaved(true);
   };
 
   // Modal state
@@ -116,9 +109,12 @@ export function PresetFormScreen() {
     pickerField === 'warmup'    ? i18n.t('presetForm.warmupMinutes') :
                                   i18n.t('presetForm.intervalMinutes');
 
+  const [showNameError, setShowNameError] = useState(false);
+  const [showSaveError, setShowSaveError] = useState(false);
+
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert(i18n.t('presetForm.name'), i18n.t('presetForm.namePlaceholder'));
+      setShowNameError(true);
       return;
     }
     setSaving(true);
@@ -137,7 +133,7 @@ export function PresetFormScreen() {
       else          await insertPreset(data);
       navigation.goBack();
     } catch {
-      Alert.alert('Error', 'Failed to save preset.');
+      setShowSaveError(true);
     } finally {
       setSaving(false);
     }
@@ -264,6 +260,30 @@ export function PresetFormScreen() {
           </View>
         </View>
       </Modal>
+      <ConfirmModal
+        visible={showUnsaved}
+        title={i18n.t('common.unsavedChanges')}
+        message={i18n.t('common.unsavedChangesMsg')}
+        confirmLabel={i18n.t('common.discard')}
+        cancelLabel={i18n.t('common.cancel')}
+        destructive
+        onConfirm={() => { setShowUnsaved(false); navigation.goBack(); }}
+        onCancel={() => setShowUnsaved(false)}
+      />
+      <ConfirmModal
+        visible={showNameError}
+        title={i18n.t('presetForm.name')}
+        message={i18n.t('presetForm.namePlaceholder')}
+        confirmLabel={i18n.t('common.ok')}
+        onConfirm={() => setShowNameError(false)}
+      />
+      <ConfirmModal
+        visible={showSaveError}
+        title="Error"
+        message="Failed to save preset."
+        confirmLabel={i18n.t('common.ok')}
+        onConfirm={() => setShowSaveError(false)}
+      />
     </GradientBackground>
   );
 }

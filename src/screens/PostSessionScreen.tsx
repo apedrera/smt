@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
   TextInput,
-  Alert,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -12,6 +13,7 @@ import { useApp } from '@/contexts/AppContext';
 import { GradientBackground } from '@/components/GradientBackground';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
+import { ConfirmModal } from '@/components/ConfirmModal';
 import { getSessionById, updateSession, deleteSession, Session } from '@/db/sessions';
 import { formatDuration } from '@/utils/formatters';
 import { HomeStackParamList } from '@/navigation/types';
@@ -29,6 +31,8 @@ export function PostSessionScreen() {
   const [session, setSession] = useState<Session | null>(null);
   const [journalEntry, setJournalEntry] = useState('');
   const [saving, setSaving] = useState(false);
+  const [showDiscard, setShowDiscard] = useState(false);
+  const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     if (sessionId) {
@@ -54,27 +58,19 @@ export function PostSessionScreen() {
     }
   };
 
-  const handleDiscard = () => {
-    Alert.alert(
-      i18n.t('common.confirm'),
-      i18n.t('postSession.discardConfirm'),
-      [
-        { text: i18n.t('common.cancel'), style: 'cancel' },
-        {
-          text: i18n.t('common.discard'),
-          style: 'destructive',
-          onPress: async () => {
-            if (session) await deleteSession(session.id);
-            navigation.popToTop();
-          },
-        },
-      ]
-    );
+  const doDiscard = async () => {
+    if (session) await deleteSession(session.id);
+    navigation.popToTop();
   };
 
   return (
     <GradientBackground>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
       <ScrollView
+        ref={scrollRef}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
@@ -91,17 +87,13 @@ export function PostSessionScreen() {
             <View style={styles.statRow}>
               <ThemedText secondary>{i18n.t('postSession.duration')}</ThemedText>
               <ThemedText style={{ fontWeight: '600' }}>
-                {session
-                  ? formatDuration(session.duration_seconds)
-                  : '—'}
+                {session ? formatDuration(session.duration_seconds) : '—'}
               </ThemedText>
             </View>
             {session?.preset_name && (
               <View style={[styles.statRow, { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border }]}>
                 <ThemedText secondary>{i18n.t('postSession.preset')}</ThemedText>
-                <ThemedText style={{ fontWeight: '600' }}>
-                  {session.preset_name}
-                </ThemedText>
+                <ThemedText style={{ fontWeight: '600' }}>{session.preset_name}</ThemedText>
               </View>
             )}
             {session?.intention && (
@@ -132,6 +124,7 @@ export function PostSessionScreen() {
             value={journalEntry}
             onChangeText={setJournalEntry}
             textAlignVertical="top"
+            onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100)}
           />
 
           <Button
@@ -143,10 +136,22 @@ export function PostSessionScreen() {
           <Button
             label={i18n.t('postSession.discardSession')}
             variant="ghost"
-            onPress={handleDiscard}
+            onPress={() => setShowDiscard(true)}
           />
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
+
+      <ConfirmModal
+        visible={showDiscard}
+        title={i18n.t('common.confirm')}
+        message={i18n.t('postSession.discardConfirm')}
+        confirmLabel={i18n.t('common.discard')}
+        cancelLabel={i18n.t('common.cancel')}
+        destructive
+        onConfirm={doDiscard}
+        onCancel={() => setShowDiscard(false)}
+      />
     </GradientBackground>
   );
 }

@@ -1,9 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
   BackHandler,
-  Alert,
   StatusBar,
 } from 'react-native';
 import { GradientBackground } from '@/components/GradientBackground';
@@ -12,6 +11,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useApp } from '@/contexts/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
+import { ConfirmModal } from '@/components/ConfirmModal';
 import { useSession } from '@/hooks/useSession';
 import { insertSession } from '@/db/sessions';
 import { configureBellAudio } from '@/audio/bellManager';
@@ -32,6 +32,7 @@ export function SessionScreen() {
   const startTimeRef = useRef<string>(new Date().toISOString());
   const sessionIdRef = useRef<string | null>(null);
   const stoppedRef = useRef(false);
+  const [showStop, setShowStop] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -86,32 +87,12 @@ export function SessionScreen() {
     await handleSave(elapsed);
   };
 
-  const handleStop = () => {
-    Alert.alert(
-      i18n.t('common.stopSession'),
-      i18n.t('common.stopSessionMsg'),
-      [
-        { text: i18n.t('common.cancel'), style: 'cancel' },
-        { text: i18n.t('session.stop'), style: 'destructive', onPress: doStop },
-      ]
-    );
-  };
+  const handleStop = () => setShowStop(true);
 
   // Android back button interception
   useEffect(() => {
     const handler = BackHandler.addEventListener('hardwareBackPress', () => {
-      Alert.alert(
-        i18n.t('session.stop'),
-        i18n.t('postSession.discardConfirm'),
-        [
-          { text: i18n.t('common.cancel'), style: 'cancel' },
-          {
-            text: i18n.t('session.stop'),
-            style: 'destructive',
-            onPress: doStop,
-          },
-        ]
-      );
+      setShowStop(true);
       return true;
     });
     return () => handler.remove();
@@ -126,87 +107,110 @@ export function SessionScreen() {
       ? Math.max(0, params.durationSeconds - state.elapsedSeconds)
       : null;
 
-  if (isWarmup) {
-    return (
-      <GradientBackground>
-        <StatusBar barStyle="light-content" />
-        <View style={styles.container}>
-          <ThemedText style={[styles.warmupLabel, { color: '#A8D5BA' }]}>
-            {i18n.t('session.warmup')}
-          </ThemedText>
-          <ThemedText variant="timer" style={[styles.timerText, { color: '#FFFFFF' }]}>
-            {formatDurationShort(state.warmupRemainingSeconds)}
-          </ThemedText>
-          <Button
-            label={i18n.t('session.stop')}
-            variant="ghost"
-            onPress={handleStop}
-            style={[styles.stopBtn, { borderColor: '#A8D5BA40' }]}
-            textStyle={{ color: '#A8D5BA' }}
-          />
-        </View>
-      </GradientBackground>
-    );
-  }
+  const inWarmup = isWarmup || (isPaused && state.warmupRemainingSeconds > 0);
 
   return (
     <GradientBackground>
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
-      <View style={styles.timeArea}>
-        <ThemedText secondary style={styles.timeLabel}>
-          {i18n.t('session.elapsed')}
-        </ThemedText>
-        <ThemedText variant="timer" style={styles.timerText}>
-          {formatDurationShort(state.elapsedSeconds)}
-        </ThemedText>
-
-        {remaining !== null && (
-          <View style={styles.remainingArea}>
-            <ThemedText secondary style={styles.timeLabel}>
-              {i18n.t('session.remaining')}
+        {inWarmup ? (
+          <>
+            <ThemedText style={[styles.warmupLabel, { color: '#A8D5BA' }]}>
+              {i18n.t('session.warmup')}
             </ThemedText>
-            <ThemedText
-              variant="subtitle"
-              style={{ color: colors.primary }}
-            >
-              {formatDurationShort(remaining)}
+            <ThemedText variant="timer" style={[styles.timerText, { color: '#FFFFFF' }]}>
+              {formatDurationShort(state.warmupRemainingSeconds)}
             </ThemedText>
-          </View>
-        )}
+            <View style={styles.controls}>
+              {isPaused ? (
+                <Button
+                  label={i18n.t('session.resume')}
+                  variant="primary"
+                  onPress={resume}
+                  style={styles.controlBtn}
+                />
+              ) : (
+                <Button
+                  label={i18n.t('session.pause')}
+                  variant="secondary"
+                  onPress={pause}
+                  style={styles.controlBtn}
+                />
+              )}
+              <Button
+                label={i18n.t('session.stop')}
+                variant="danger"
+                onPress={handleStop}
+                style={styles.controlBtn}
+              />
+            </View>
+          </>
+        ) : (
+          <>
+            <View style={styles.timeArea}>
+              <ThemedText secondary style={styles.timeLabel}>
+                {i18n.t('session.elapsed')}
+              </ThemedText>
+              <ThemedText variant="timer" style={styles.timerText}>
+                {formatDurationShort(state.elapsedSeconds)}
+              </ThemedText>
 
-        {params.presetName && (
-          <ThemedText secondary style={styles.presetLabel}>
-            {params.presetName}
-          </ThemedText>
+              {remaining !== null && (
+                <View style={styles.remainingArea}>
+                  <ThemedText secondary style={styles.timeLabel}>
+                    {i18n.t('session.remaining')}
+                  </ThemedText>
+                  <ThemedText variant="subtitle" style={{ color: colors.primary }}>
+                    {formatDurationShort(remaining)}
+                  </ThemedText>
+                </View>
+              )}
+
+              {params.presetName && (
+                <ThemedText secondary style={styles.presetLabel}>
+                  {params.presetName}
+                </ThemedText>
+              )}
+            </View>
+
+            <View style={styles.controls}>
+              {isRunning && (
+                <Button
+                  label={i18n.t('session.pause')}
+                  variant="secondary"
+                  onPress={pause}
+                  style={styles.controlBtn}
+                />
+              )}
+              {isPaused && (
+                <Button
+                  label={i18n.t('session.resume')}
+                  variant="primary"
+                  onPress={resume}
+                  style={styles.controlBtn}
+                />
+              )}
+              <Button
+                label={remaining === 0 ? i18n.t('session.finish') : i18n.t('session.stop')}
+                variant="danger"
+                onPress={handleStop}
+                style={styles.controlBtn}
+              />
+            </View>
+          </>
         )}
       </View>
 
-      <View style={styles.controls}>
-        {isRunning && (
-          <Button
-            label={i18n.t('session.pause')}
-            variant="secondary"
-            onPress={pause}
-            style={styles.controlBtn}
-          />
-        )}
-        {isPaused && (
-          <Button
-            label={i18n.t('session.resume')}
-            variant="primary"
-            onPress={resume}
-            style={styles.controlBtn}
-          />
-        )}
-        <Button
-          label={remaining === 0 ? i18n.t('session.finish') : i18n.t('session.stop')}
-          variant="danger"
-          onPress={handleStop}
-          style={styles.controlBtn}
-        />
-      </View>
-      </View>
+      <ConfirmModal
+        visible={showStop}
+        title={i18n.t('common.stopSession')}
+        message={i18n.t('common.stopSessionMsg')}
+        confirmLabel={i18n.t('session.stop')}
+        cancelLabel={i18n.t('common.cancel')}
+        destructive
+        onConfirm={() => { setShowStop(false); doStop(); }}
+        onCancel={() => setShowStop(false)}
+      />
     </GradientBackground>
   );
 }
@@ -227,9 +231,6 @@ const styles = StyleSheet.create({
     fontSize: 72,
     fontWeight: '200',
     letterSpacing: 2,
-  },
-  stopBtn: {
-    marginTop: 48,
   },
   timeArea: {
     alignItems: 'center',
@@ -253,6 +254,7 @@ const styles = StyleSheet.create({
   controls: {
     gap: 14,
     width: '80%',
+    marginTop: 48,
   },
   controlBtn: {
     width: '100%',
