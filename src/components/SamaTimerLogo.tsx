@@ -7,13 +7,13 @@ interface SamaTimerLogoProps {
   variant?: 'vertical' | 'horizontal';
 }
 
-// Vertical: viewBox="108 8 184 248"  → aspect ratio 184/248
+// Vertical: viewBox="90 8 220 248"  → aspect ratio 220/248
 function VerticalLogo({ color, size = 200 }: { color: string; size: number }) {
   const width = size;
-  const height = size * (248 / 184);
+  const height = size * (248 / 220);
 
   return (
-    <Svg width={width} height={height} viewBox="108 8 184 248">
+    <Svg width={width} height={height} viewBox="90 8 220 248">
       <Circle cx="200" cy="100" r="82" fill="none" stroke={color} strokeWidth="0.6" opacity="0.22" />
       <Circle cx="200" cy="100" r="62" fill="none" stroke={color} strokeWidth="0.8" opacity="0.35" />
       <Circle cx="200" cy="100" r="42" fill="none" stroke={color} strokeWidth="1.0" opacity="0.68" />
@@ -35,9 +35,9 @@ function VerticalLogo({ color, size = 200 }: { color: string; size: number }) {
       <Line x1="200" y1="100" x2="233" y2="100" stroke={color} strokeWidth="2.4" strokeLinecap="round" opacity="0.72" />
       <Circle cx="200" cy="100" r="2.8" fill={color} opacity="0.82" />
       <Path d="M 146 133 Q 200 163 254 133" fill="none" stroke={color} strokeWidth="1.0" strokeDasharray="3 5" strokeLinecap="round" opacity="0.38" />
-      <SvgText x="200" y="206" textAnchor="middle" fontFamily="Georgia, serif" fontWeight="400" fontSize="38" letterSpacing="5" fill={color}>SAMA</SvgText>
+      <SvgText x="200" y="206" textAnchor="middle" fontFamily="Georgia, serif" fontWeight="400" fontSize="38" letterSpacing="4" fill={color}>Sama</SvgText>
       <Line x1="148" y1="217" x2="252" y2="217" stroke={color} strokeWidth="0.5" opacity="0.35" />
-      <SvgText x="200" y="244" textAnchor="middle" fontFamily="Georgia, serif" fontWeight="400" fontSize="18" letterSpacing="6" fill={color} opacity="0.72">TIMER</SvgText>
+      <SvgText x="200" y="240" textAnchor="middle" fontFamily="Georgia, serif" fontWeight="400" fontSize="15" letterSpacing="0.5" fill={color} opacity="0.72">(Simple Meditation Timer)</SvgText>
     </Svg>
   );
 }
@@ -70,9 +70,9 @@ function HorizontalLogo({ color, size = 200 }: { color: string; size: number }) 
       <Line x1="80" y1="80" x2="107" y2="80" stroke={color} strokeWidth="2.4" strokeLinecap="round" opacity="0.72" />
       <Circle cx="80" cy="80" r="2.5" fill={color} opacity="0.82" />
       <Path d="M 46 102 Q 80 120 114 102" fill="none" stroke={color} strokeWidth="0.9" strokeDasharray="3 4.5" strokeLinecap="round" opacity="0.38" />
-      <SvgText x="162" y="74" textAnchor="start" fontFamily="Georgia, serif" fontWeight="400" fontSize="52" letterSpacing="6" fill={color}>SAMA</SvgText>
+      <SvgText x="162" y="74" textAnchor="start" fontFamily="Georgia, serif" fontWeight="400" fontSize="52" letterSpacing="4" fill={color}>Sama</SvgText>
       <Line x1="162" y1="86" x2="362" y2="86" stroke={color} strokeWidth="0.5" opacity="0.35" />
-      <SvgText x="163" y="113" textAnchor="start" fontFamily="Georgia, serif" fontWeight="400" fontSize="20" letterSpacing="8" fill={color} opacity="0.72">TIMER</SvgText>
+      <SvgText x="163" y="113" textAnchor="start" fontFamily="Georgia, serif" fontWeight="400" fontSize="16" letterSpacing="1.5" fill={color} opacity="0.72">Simple Meditation Timer</SvgText>
     </Svg>
   );
 }

@@ -30,7 +30,7 @@
     "selectPreset": "Meditación con Preset",
     "viewJournal": "Ver Diario",
     "donationBanner": "Gratis y sin anuncios. Si ayuda a tu práctica, considera apoyarla.",
-    "donate": "Apoyar SAMA Timer"
+    "donate": "Apoyar Sama"
   },
   "session": {
     "elapsed": "Transcurrido",
@@ -94,6 +94,7 @@
     "default": "Predeterminado",
     "free": "Sesión libre",
     "noIntervals": "Sin intervalos",
+    "noWarmup": "Sin calentamiento",
     "min": "min",
     "warmup": "calentamiento"
   },
@@ -144,7 +145,7 @@
   },
   "donations": {
     "title": "Apoyar la App",
-    "subtitle": "SAMA Timer es gratuita y sin anuncios.\nSi ayuda a tu práctica, considera apoyar su desarrollo.",
+    "subtitle": "Sama es gratuita y sin anuncios.\nSi ayuda a tu práctica, considera apoyar su desarrollo.",
     "kofiPaypal": "Ko-fi / PayPal",
     "googlePlay": "Compra única",
     "crypto": "Cripto",
@@ -159,7 +160,7 @@
   },
   "about": {
     "title": "Acerca de",
-    "description": "SAMA Timer es un temporizador de meditación simple, sin anuncios y con un diario local. Sin rastreo. No requiere internet.",
+    "description": "Sama (Simple Meditation Timer) es un temporizador de meditación sin anuncios y con un diario local. Sin rastreo. No requiere internet.",
     "version": "Versión",
     "author": "Autor",
     "privacyPolicy": "Política de Privacidad",
@@ -167,13 +168,13 @@
     "authorName": "Karl Banor",
     "pp": {
       "s1title": "Sin recopilación de datos",
-      "s1body": "SAMA Timer no recopila, almacena ni transmite ningún dato personal ni información de uso de ningún tipo.",
+      "s1body": "Sama no recopila, almacena ni transmite ningún dato personal ni información de uso de ningún tipo.",
       "s2title": "Tus datos permanecen en tu dispositivo",
       "s2body": "Toda la información que creas en la app — sesiones, entradas del diario, presets y ajustes — se almacena exclusivamente en tu dispositivo mediante almacenamiento local. Estos datos nunca salen de tu dispositivo ni se comparten con nadie.",
       "s3title": "Sin analíticas ni rastreo",
       "s3body": "La app no contiene herramientas de analítica, SDKs publicitarios, informes de errores ni ningún código de seguimiento de terceros. No tenemos forma de saber cómo usas la app, y no queremos tenerla.",
       "s4title": "Sin conexión a internet",
-      "s4body": "SAMA Timer funciona completamente sin conexión. No realiza ninguna petición de red de ningún tipo. No se necesita internet para usar ninguna función de la app.",
+      "s4body": "Sama funciona completamente sin conexión. No realiza ninguna petición de red de ningún tipo. No se necesita internet para usar ninguna función de la app.",
       "s5title": "Sin cuentas de usuario",
       "s5body": "La app no requiere ni ofrece cuentas de usuario, inicios de sesión ni registro de ningún tipo.",
       "updated": "Última actualización: marzo de 2026"

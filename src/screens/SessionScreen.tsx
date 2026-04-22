@@ -82,8 +82,7 @@ export function SessionScreen() {
   const doStop = async () => {
     if (stoppedRef.current) return;
     stoppedRef.current = true;
-    await stop();
-    const elapsed = state.elapsedSeconds;
+    const elapsed = await stop();
     await handleSave(elapsed);
   };
 
@@ -96,7 +95,7 @@ export function SessionScreen() {
       return true;
     });
     return () => handler.remove();
-  }, [state.elapsedSeconds]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isWarmup = state.phase === 'warmup';
   const isPaused = state.phase === 'paused';
@@ -191,7 +190,7 @@ export function SessionScreen() {
                 />
               )}
               <Button
-                label={remaining === 0 ? i18n.t('session.finish') : i18n.t('session.stop')}
+                label={(remaining === null || remaining === 0) ? i18n.t('session.finish') : i18n.t('session.stop')}
                 variant="danger"
                 onPress={handleStop}
                 style={styles.controlBtn}
@@ -205,8 +204,8 @@ export function SessionScreen() {
         visible={showStop}
         title={i18n.t('common.stopSession')}
         message={i18n.t('common.stopSessionMsg')}
-        confirmLabel={i18n.t('session.stop')}
-        cancelLabel={i18n.t('common.cancel')}
+        confirmLabel={i18n.t('common.yes')}
+        cancelLabel={i18n.t('common.no')}
         destructive
         onConfirm={() => { setShowStop(false); doStop(); }}
         onCancel={() => setShowStop(false)}

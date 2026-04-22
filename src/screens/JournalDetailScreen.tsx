@@ -5,8 +5,6 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
 import { GradientBackground } from '@/components/GradientBackground';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -79,12 +77,12 @@ export function JournalDetailScreen() {
 
   return (
     <GradientBackground>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}>
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
+        automaticallyAdjustKeyboardInsets
       >
         <View style={styles.container}>
           <View style={styles.header}>
@@ -141,6 +139,7 @@ export function JournalDetailScreen() {
             onChangeText={setIntention}
             multiline
             textAlignVertical="top"
+            onFocus={() => setTimeout(() => scrollViewRef.current?.scrollTo({ y: 200, animated: true }), 300)}
           />
 
           {/* Editable: Notes */}
@@ -175,7 +174,6 @@ export function JournalDetailScreen() {
           />
         </View>
       </ScrollView>
-      </KeyboardAvoidingView>
 
       <ConfirmModal
         visible={showDelete}

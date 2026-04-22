@@ -124,7 +124,7 @@ export function PostSessionScreen() {
             value={journalEntry}
             onChangeText={setJournalEntry}
             textAlignVertical="top"
-            onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100)}
+            onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 400)}
           />
 
           <Button

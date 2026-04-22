@@ -195,7 +195,7 @@ export function PresetFormScreen() {
             activeOpacity={0.7}
           >
             <ThemedText style={styles.valueText}>
-              {formatMinutes(warmupMinutes, i18n.t('presets.noIntervals'))}
+              {formatMinutes(warmupMinutes, i18n.t('presets.noWarmup'))}
             </ThemedText>
             <ThemedText secondary style={styles.chevron}>›</ThemedText>
           </TouchableOpacity>

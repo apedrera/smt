@@ -244,7 +244,7 @@ export function useSession() {
     tickRef.current = setInterval(tick, 1000);
   }, [computeElapsed, tick]);
 
-  const stop = useCallback(async () => {
+  const stop = useCallback(async (): Promise<number> => {
     stopTicker();
     deactivateKeepAwake();
     phaseRef.current = 'ended';
@@ -254,6 +254,7 @@ export function useSession() {
       phase: 'ended',
       elapsedSeconds: elapsed,
     }));
+    return elapsed;
   }, [computeElapsed, stopTicker]);
 
   // Cleanup

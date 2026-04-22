@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import {
   ScrollView,
   View,
@@ -31,6 +31,13 @@ export function WheelPicker({
   const flatRef = useRef<ScrollView>(null);
 
   const selectedIndex = values.indexOf(selectedValue);
+
+  useEffect(() => {
+    const index = values.indexOf(selectedValue);
+    if (index >= 0 && flatRef.current) {
+      flatRef.current.scrollTo({ y: index * ITEM_HEIGHT, animated: false });
+    }
+  }, [selectedValue, values]);
 
   const onMomentumScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -78,7 +85,6 @@ export function WheelPicker({
         decelerationRate="fast"
         onMomentumScrollEnd={onMomentumScrollEnd}
         nestedScrollEnabled
-        contentOffset={{ x: 0, y: (selectedIndex >= 0 ? selectedIndex : 0) * ITEM_HEIGHT }}
       >
         {paddedValues.map((item, i) => (
           <View key={i} style={[styles.item, { height: ITEM_HEIGHT }]}>

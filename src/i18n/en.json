@@ -30,7 +30,7 @@
     "selectPreset": "Preset Meditation",
     "viewJournal": "View Journal",
     "donationBanner": "Free & ad-free. If it helps your practice, consider supporting it.",
-    "donate": "Support SAMA Timer"
+    "donate": "Support Sama"
   },
   "session": {
     "elapsed": "Elapsed",
@@ -94,6 +94,7 @@
     "default": "Default",
     "free": "Free session",
     "noIntervals": "No intervals",
+    "noWarmup": "No warmup",
     "min": "min",
     "warmup": "warm up"
   },
@@ -144,7 +145,7 @@
   },
   "donations": {
     "title": "Support the App",
-    "subtitle": "SAMA Timer is free and ad-free.\nIf it helps your practice, consider supporting its development.",
+    "subtitle": "Sama is free and ad-free.\nIf it helps your practice, consider supporting its development.",
     "kofiPaypal": "Ko-fi / PayPal",
     "googlePlay": "One-time purchase",
     "crypto": "Crypto",
@@ -159,7 +160,7 @@
   },
   "about": {
     "title": "About",
-    "description": "SAMA Timer is a simple, ad-free meditation timer with a local journal. No tracking. No internet required.",
+    "description": "Sama (Simple Meditation Timer) is an ad-free meditation timer with a local journal. No tracking. No internet required.",
     "version": "Version",
     "author": "Author",
     "privacyPolicy": "Privacy Policy",
@@ -167,13 +168,13 @@
     "authorName": "Karl Banor",
     "pp": {
       "s1title": "No data collection",
-      "s1body": "SAMA Timer does not collect, store, or transmit any personal data or usage information of any kind.",
+      "s1body": "Sama does not collect, store, or transmit any personal data or usage information of any kind.",
       "s2title": "Your data stays on your device",
       "s2body": "All information you create in the app — sessions, journal entries, presets, and settings — is stored exclusively on your device using local storage. This data never leaves your device and is never shared with anyone.",
       "s3title": "No analytics or tracking",
       "s3body": "The app contains no analytics tools, advertising SDKs, crash reporters, or any third-party tracking code. We have no way of knowing how you use the app, and we do not want to.",
       "s4title": "No internet connection required",
-      "s4body": "SAMA Timer works entirely offline. It makes no network requests of any kind. An internet connection is never needed to use any feature of the app.",
+      "s4body": "Sama works entirely offline. It makes no network requests of any kind. An internet connection is never needed to use any feature of the app.",
       "s5title": "No accounts",
       "s5body": "The app does not require or offer user accounts, logins, or registration of any kind.",
       "updated": "Last updated: March 2026"

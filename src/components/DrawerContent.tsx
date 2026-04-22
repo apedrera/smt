@@ -11,7 +11,6 @@ import {
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import { useApp } from '@/contexts/AppContext';
-import { SamaTimerLogo } from '@/components/SamaTimerLogo';
 import { i18n } from '@/i18n';
 
 interface DrawerItem {
@@ -45,9 +44,6 @@ export function DrawerContent(props: DrawerContentComponentProps) {
         { backgroundColor: colors.surface },
       ]}
     >
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <SamaTimerLogo color={colors.primary} size={224} variant="horizontal" />
-      </View>
       <ScrollView style={styles.nav}>
         {items.map(item => {
           const isActive = activeRoute === item.route;
@@ -86,12 +82,6 @@ export function DrawerContent(props: DrawerContentComponentProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    alignItems: 'flex-start',
   },
   nav: {
     paddingTop: 8,
