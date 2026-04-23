@@ -7,7 +7,7 @@ import { Button } from '@/components/Button';
 import { i18n } from '@/i18n';
 
 export function OnboardingScreen({ onDone }: { onDone: () => void }) {
-  const { colors, updateSettings } = useApp();
+  const { colors, isDark, updateSettings } = useApp();
 
   const handleStart = async () => {
     await updateSettings({ hasSeenOnboarding: true });
@@ -18,7 +18,7 @@ export function OnboardingScreen({ onDone }: { onDone: () => void }) {
     <GradientBackground>
     <View style={styles.container}>
       <View style={styles.logoArea}>
-        <Image source={require('../../assets/logo.png')} style={{ width: 220, height: 220 }} resizeMode="contain" />
+        <Image source={isDark ? require('../../assets/logo-light.png') : require('../../assets/logo.png')} style={{ width: 220, height: 220 }} resizeMode="contain" />
         <View
           style={[styles.divider, { backgroundColor: colors.accent }]}
         />

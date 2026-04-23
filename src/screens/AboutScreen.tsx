@@ -16,7 +16,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { i18n } from '@/i18n';
 
 export function AboutScreen() {
-  const { colors } = useApp();
+  const { colors, isDark } = useApp();
   const navigation = useNavigation();
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const [showPrivacy, setShowPrivacy] = useState(false);
@@ -39,7 +39,7 @@ export function AboutScreen() {
           </View>
 
           <View style={styles.logoArea}>
-            <Image source={require('../../assets/logo.png')} style={{ width: 160, height: 160 }} resizeMode="contain" />
+            <Image source={isDark ? require('../../assets/logo-light.png') : require('../../assets/logo.png')} style={{ width: 160, height: 160 }} resizeMode="contain" />
             <ThemedText secondary style={{ fontSize: 14, marginTop: 4 }}>
               {i18n.t('about.version')} {version}
             </ThemedText>

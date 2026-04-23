@@ -25,7 +25,7 @@ type HomeNav = StackNavigationProp<HomeStackParamList, 'Home'>;
 const MINUTES = Array.from({ length: 121 }, (_, i) => i);
 
 export function HomeScreen() {
-  const { colors } = useApp();
+  const { colors, isDark } = useApp();
   const navigation = useNavigation<HomeNav>();
   const [showTimedPicker, setShowTimedPicker] = useState(false);
   const [timedMinutes, setTimedMinutes] = useState(20);
@@ -121,7 +121,7 @@ export function HomeScreen() {
 
         {/* Logo */}
         <View style={styles.logoArea}>
-          <Image source={require('../../assets/logo.png')} style={{ width: 160, height: 160 }} resizeMode="contain" />
+          <Image source={isDark ? require('../../assets/logo-light.png') : require('../../assets/logo.png')} style={{ width: 160, height: 160 }} resizeMode="contain" />
         </View>
 
         {/* Main options */}
