@@ -17,7 +17,7 @@
     "deleteEntry": "Eliminar entrada",
     "deleteEntryMsg": "¿Seguro que quieres eliminar esta sesión? Esta acción no se puede deshacer.",
     "stopSession": "Finalizar sesión",
-    "stopSessionMsg": "¿Finalizar la sesión? Se guardará en tu diario."
+    "stopSessionMsg": "¿Finalizar la sesión?"
   },
   "onboarding": {
     "subtitle": "Un temporizador limpio y sin anuncios para tu práctica de meditación.",
@@ -30,7 +30,7 @@
     "selectPreset": "Meditación con Preset",
     "viewJournal": "Ver Diario",
     "donationBanner": "Gratis y sin anuncios. Si ayuda a tu práctica, considera apoyarla.",
-    "donate": "Apoyar Sama"
+    "donate": "Apoyar Sama Timer"
   },
   "session": {
     "elapsed": "Transcurrido",

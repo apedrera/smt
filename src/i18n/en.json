@@ -17,7 +17,7 @@
     "deleteEntry": "Delete entry",
     "deleteEntryMsg": "Are you sure you want to delete this session? This action cannot be undone.",
     "stopSession": "End session",
-    "stopSessionMsg": "End the session? It will be saved to your journal."
+    "stopSessionMsg": "End the session?"
   },
   "onboarding": {
     "subtitle": "A clean, ad-free timer for your meditation practice.",
@@ -30,7 +30,7 @@
     "selectPreset": "Preset Meditation",
     "viewJournal": "View Journal",
     "donationBanner": "Free & ad-free. If it helps your practice, consider supporting it.",
-    "donate": "Support Sama"
+    "donate": "Support Sama Timer"
   },
   "session": {
     "elapsed": "Elapsed",
