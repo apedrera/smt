@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { useApp } from '@/contexts/AppContext';
 import { GradientBackground } from '@/components/GradientBackground';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
-import { SamaTimerLogo } from '@/components/SamaTimerLogo';
 import { i18n } from '@/i18n';
 
 export function OnboardingScreen({ onDone }: { onDone: () => void }) {
@@ -19,7 +18,7 @@ export function OnboardingScreen({ onDone }: { onDone: () => void }) {
     <GradientBackground>
     <View style={styles.container}>
       <View style={styles.logoArea}>
-        <SamaTimerLogo color={colors.primary} size={220} />
+        <Image source={require('../../assets/logo.png')} style={{ width: 220, height: 220 }} resizeMode="contain" />
         <View
           style={[styles.divider, { backgroundColor: colors.accent }]}
         />

@@ -6,6 +6,7 @@ import {
   Modal,
   FlatList,
   Text,
+  Image,
 } from 'react-native';
 import { GradientBackground } from '@/components/GradientBackground';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
@@ -15,7 +16,6 @@ import { useApp } from '@/contexts/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
 import { WheelPicker } from '@/components/WheelPicker';
-import { SamaTimerLogo } from '@/components/SamaTimerLogo';
 import { getAllPresets, Preset } from '@/db/presets';
 import { HomeStackParamList } from '@/navigation/types';
 import { i18n } from '@/i18n';
@@ -121,7 +121,7 @@ export function HomeScreen() {
 
         {/* Logo */}
         <View style={styles.logoArea}>
-          <SamaTimerLogo color={colors.primary} size={160} />
+          <Image source={require('../../assets/logo.png')} style={{ width: 160, height: 160 }} resizeMode="contain" />
         </View>
 
         {/* Main options */}

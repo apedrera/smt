@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
+  Image,
 } from 'react-native';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import { useApp } from '@/contexts/AppContext';
 import { GradientBackground } from '@/components/GradientBackground';
 import { ThemedText } from '@/components/ThemedText';
-import { SamaTimerLogo } from '@/components/SamaTimerLogo';
 import { i18n } from '@/i18n';
 
 export function AboutScreen() {
@@ -39,7 +39,7 @@ export function AboutScreen() {
           </View>
 
           <View style={styles.logoArea}>
-            <SamaTimerLogo color={colors.primary} size={160} />
+            <Image source={require('../../assets/logo.png')} style={{ width: 160, height: 160 }} resizeMode="contain" />
             <ThemedText secondary style={{ fontSize: 14, marginTop: 4 }}>
               {i18n.t('about.version')} {version}
             </ThemedText>
