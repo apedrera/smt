@@ -22,9 +22,8 @@
       },
       "predictiveBackGestureEnabled": false,
       "minSdkVersion": 26,
-      "package": "com.karlbanor.samatimer",
+      "package": "com.karlbanor.sama",
       "permissions": [
-        "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
       ]
     },
