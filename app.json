@@ -31,7 +31,7 @@
       "favicon": "./assets/logo.png"
     },
     "plugins": [
-      "expo-av",
+      ["expo-av", { "microphonePermission": false }],
       "expo-sqlite",
       "expo-localization",
       "./plugins/withRemoveRecordAudio"
