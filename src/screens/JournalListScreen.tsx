@@ -19,6 +19,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
 import { getAllSessions, Session } from '@/db/sessions';
 import { exportAsTxt, exportAsJson, exportAsXlsx } from '@/utils/exportJournal';
+import { pickAndParse, analyzeImport } from '@/utils/importJournal';
+import { setImportData } from '@/utils/importState';
 import { formatDuration, formatDate, formatTime } from '@/utils/formatters';
 import { JournalStackParamList } from '@/navigation/types';
 import { i18n } from '@/i18n';
@@ -30,14 +32,42 @@ export function JournalListScreen() {
   const navigation = useNavigation<JournalNav>();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showExportError, setShowExportError] = useState(false);
+  const [importErrorMsg, setImportErrorMsg] = useState<string | null>(null);
 
   useFocusEffect(
     useCallback(() => {
       getAllSessions().then(setSessions).catch(console.warn);
     }, [])
   );
+
+  const handleImport = async () => {
+    setImporting(true);
+    try {
+      const parsed = await pickAndParse();
+      if (!parsed) return;
+      const data = await analyzeImport(parsed.sessions);
+      setImportData(data);
+      const { sessions } = parsed;
+      const dates = sessions.map(s => s.date).sort();
+      navigation.navigate('ImportPreview', {
+        totalCount: sessions.length,
+        newCount: data.toAdd.length,
+        identicalCount: data.identical.length,
+        conflictCount: data.conflicts.length,
+        oldestDate: dates[0] ?? null,
+        newestDate: dates[dates.length - 1] ?? null,
+      });
+    } catch (err) {
+      setImportErrorMsg(
+        err instanceof Error ? err.message : i18n.t('import.errorInvalid')
+      );
+    } finally {
+      setImporting(false);
+    }
+  };
 
   const handleExport = () => {
     if (Platform.OS === 'ios') {
@@ -172,11 +202,18 @@ export function JournalListScreen() {
             <View style={[styles.hLine, { backgroundColor: colors.textPrimary }]} />
           </TouchableOpacity>
           <ThemedText variant="subtitle">{i18n.t('journal.title')}</ThemedText>
-          <TouchableOpacity onPress={handleExport} disabled={exporting || sessions.length === 0}>
-            <ThemedText style={{ color: colors.primary }}>
-              {exporting ? '...' : i18n.t('journal.download')}
-            </ThemedText>
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row', gap: 14, alignItems: 'center' }}>
+            <TouchableOpacity onPress={handleImport} disabled={importing}>
+              <ThemedText style={{ color: colors.primary }}>
+                {importing ? '...' : i18n.t('journal.import')}
+              </ThemedText>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleExport} disabled={exporting || sessions.length === 0}>
+              <ThemedText style={{ color: exporting || sessions.length === 0 ? colors.textSecondary : colors.primary }}>
+                {exporting ? '...' : i18n.t('journal.download')}
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {sessions.length === 0 ? (
@@ -209,6 +246,13 @@ export function JournalListScreen() {
         message={i18n.t('export.error')}
         confirmLabel={i18n.t('common.ok')}
         onConfirm={() => setShowExportError(false)}
+      />
+      <ConfirmModal
+        visible={importErrorMsg !== null}
+        title={i18n.t('import.errorTitle')}
+        message={importErrorMsg ?? ''}
+        confirmLabel={i18n.t('common.ok')}
+        onConfirm={() => setImportErrorMsg(null)}
       />
     </GradientBackground>
   );

@@ -20,6 +20,9 @@ import { PostSessionScreen } from '@/screens/PostSessionScreen';
 import { JournalListScreen } from '@/screens/JournalListScreen';
 import { JournalBrowseScreen } from '@/screens/JournalBrowseScreen';
 import { JournalDetailScreen } from '@/screens/JournalDetailScreen';
+import { ImportPreviewScreen } from '@/screens/ImportPreviewScreen';
+import { ImportConflictsScreen } from '@/screens/ImportConflictsScreen';
+import { ImportSummaryScreen } from '@/screens/ImportSummaryScreen';
 import { PresetsScreen } from '@/screens/PresetsScreen';
 import { PresetFormScreen } from '@/screens/PresetFormScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
@@ -60,6 +63,9 @@ function JournalStackNavigator() {
       <JournalStack.Screen name="JournalList" component={JournalListScreen} />
       <JournalStack.Screen name="JournalBrowse" component={JournalBrowseScreen} />
       <JournalStack.Screen name="JournalDetail" component={JournalDetailScreen} />
+      <JournalStack.Screen name="ImportPreview" component={ImportPreviewScreen} />
+      <JournalStack.Screen name="ImportConflicts" component={ImportConflictsScreen} />
+      <JournalStack.Screen name="ImportSummary" component={ImportSummaryScreen} />
     </JournalStack.Navigator>
   );
 }

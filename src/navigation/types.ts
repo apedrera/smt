@@ -37,6 +37,20 @@ export type JournalStackParamList = {
   JournalList: undefined;
   JournalBrowse: { initialIndex?: number } | undefined;
   JournalDetail: { sessionId: string };
+  ImportPreview: {
+    totalCount: number;
+    newCount: number;
+    identicalCount: number;
+    conflictCount: number;
+    oldestDate: string | null;
+    newestDate: string | null;
+  };
+  ImportConflicts: undefined;
+  ImportSummary: {
+    added: number;
+    replaced: number;
+    skipped: number;
+  };
 };
 
 export type PresetsStackParamList = {

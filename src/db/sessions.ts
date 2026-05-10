@@ -75,3 +75,23 @@ export async function deleteSession(id: string): Promise<void> {
   const db = await getDatabase();
   await db.runAsync('DELETE FROM sessions WHERE id = ?', [id]);
 }
+
+export async function insertSessionWithId(session: Session): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    `INSERT INTO sessions (id, date, start_time, duration_seconds, preset_id, preset_name, intention, journal_entry, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      session.id,
+      session.date,
+      session.start_time,
+      session.duration_seconds,
+      session.preset_id ?? null,
+      session.preset_name ?? null,
+      session.intention ?? null,
+      session.journal_entry ?? null,
+      session.created_at,
+      session.updated_at,
+    ]
+  );
+}
