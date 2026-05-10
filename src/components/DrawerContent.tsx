@@ -28,6 +28,7 @@ export function DrawerContent(props: DrawerContentComponentProps) {
   const items: DrawerItem[] = [
     { label: i18n.t('home.title'), route: 'HomeStack', icon: '🧘' },
     { label: i18n.t('journal.title'), route: 'JournalStack', icon: '📖' },
+    { label: i18n.t('stats.title'), route: 'Stats', icon: '📊' },
     { label: i18n.t('presets.title'), route: 'Presets', icon: '◎', iconColor: colors.primary, iconSize: 40 },
     { label: i18n.t('settings.title'), route: 'Settings', icon: '⚙️' },
     { label: i18n.t('donations.title'), route: 'Donations', icon: '💚' },

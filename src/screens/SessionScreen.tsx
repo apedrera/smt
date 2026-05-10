@@ -24,7 +24,7 @@ type SessionRoute = RouteProp<HomeStackParamList, 'Session'>;
 type SessionNav = StackNavigationProp<HomeStackParamList, 'Session'>;
 
 export function SessionScreen() {
-  const { colors } = useApp();
+  const { colors, isDark } = useApp();
   const navigation = useNavigation<SessionNav>();
   const route = useRoute<SessionRoute>();
   const params = route.params;
@@ -114,10 +114,10 @@ export function SessionScreen() {
       <View style={styles.container}>
         {inWarmup ? (
           <>
-            <ThemedText style={[styles.warmupLabel, { color: '#A8D5BA' }]}>
+            <ThemedText style={[styles.warmupLabel, { color: isDark ? '#A8D5BA' : colors.textSecondary }]}>
               {i18n.t('session.warmup')}
             </ThemedText>
-            <ThemedText variant="timer" style={[styles.timerText, { color: '#FFFFFF' }]}>
+            <ThemedText variant="timer" style={[styles.timerText, { color: isDark ? '#FFFFFF' : colors.textPrimary }]}>
               {formatDurationShort(state.warmupRemainingSeconds)}
             </ThemedText>
             <View style={styles.controls}>

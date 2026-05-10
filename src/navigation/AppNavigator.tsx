@@ -25,6 +25,7 @@ import { ImportConflictsScreen } from '@/screens/ImportConflictsScreen';
 import { ImportSummaryScreen } from '@/screens/ImportSummaryScreen';
 import { PresetsScreen } from '@/screens/PresetsScreen';
 import { PresetFormScreen } from '@/screens/PresetFormScreen';
+import { StatsScreen } from '@/screens/StatsScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
 import { DonationsScreen } from '@/screens/DonationsScreen';
 import { AboutScreen } from '@/screens/AboutScreen';
@@ -103,6 +104,7 @@ export function AppNavigator() {
       >
         <Drawer.Screen name="HomeStack" component={HomeStackNavigator} />
         <Drawer.Screen name="JournalStack" component={JournalStackNavigator} />
+        <Drawer.Screen name="Stats" component={StatsScreen} />
         <Drawer.Screen name="Presets" component={PresetsStackNavigator} />
         <Drawer.Screen name="Settings" component={SettingsScreen} />
         <Drawer.Screen name="Donations" component={DonationsScreen} />

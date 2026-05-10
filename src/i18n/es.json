@@ -135,6 +135,17 @@
     "googleDrive": "Sincronizar con Google Drive",
     "comingSoon": "Próximamente"
   },
+  "stats": {
+    "title": "Estadísticas",
+    "day": "Día",
+    "week": "Semana",
+    "month": "Mes",
+    "all": "Todo",
+    "totalMin": "min totales",
+    "avgMin": "min promedio",
+    "minutes": "minutos",
+    "noData": "Sin sesiones en este período"
+  },
   "export": {
     "title": "Exportar Diario",
     "exportTxt": "Exportar como TXT",
@@ -189,7 +200,7 @@
   },
   "about": {
     "title": "Acerca de",
-    "description": "Sama (Simple Meditation Timer) es un temporizador de meditación sin anuncios y con un diario local. Sin rastreo. No requiere internet.",
+    "description": "Sama (Simple Meditation Timer) es un temporizador de meditación sin anuncios con diario local. Exporta e importa tus sesiones en formato JSON, XLSX o TXT. Sin rastreo. No requiere internet.",
     "version": "Versión",
     "author": "Autor",
     "privacyPolicy": "Política de Privacidad",

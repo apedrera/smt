@@ -1,6 +1,7 @@
 export type RootDrawerParamList = {
   HomeStack: undefined;
   JournalStack: undefined;
+  Stats: undefined;
   Presets: undefined;
   Settings: undefined;
   Donations: undefined;

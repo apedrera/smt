@@ -16,7 +16,9 @@ import { useApp } from '@/contexts/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from '@/components/Button';
 import { WheelPicker } from '@/components/WheelPicker';
+import { BellSelector } from '@/components/BellSelector';
 import { getAllPresets, Preset } from '@/db/presets';
+import { BellSettings } from '@/hooks/useSettings';
 import { HomeStackParamList } from '@/navigation/types';
 import { i18n } from '@/i18n';
 
@@ -25,12 +27,14 @@ type HomeNav = StackNavigationProp<HomeStackParamList, 'Home'>;
 const MINUTES = Array.from({ length: 121 }, (_, i) => i);
 
 export function HomeScreen() {
-  const { colors, isDark } = useApp();
+  const { colors, isDark, settings, updateSettings } = useApp();
   const navigation = useNavigation<HomeNav>();
   const [showTimedPicker, setShowTimedPicker] = useState(false);
   const [timedMinutes, setTimedMinutes] = useState(20);
   const [showPresetPicker, setShowPresetPicker] = useState(false);
   const [presets, setPresets] = useState<Preset[]>([]);
+  const [showBellModal, setShowBellModal] = useState<'free' | 'timed' | null>(null);
+  const [draftBells, setDraftBells] = useState<BellSettings>({ startingBellId: null, endingBellId: null });
 
   useFocusEffect(
     useCallback(() => {
@@ -52,13 +56,14 @@ export function HomeScreen() {
   };
 
   const onFree = () => {
+    const bells = settings.freeBells;
     navigateToIntention({
       durationSeconds: 0,
       warmupSeconds: 0,
       intervalSeconds: 0,
-      startingBellId: null,
+      startingBellId: bells.startingBellId,
       intervalBellId: null,
-      endingBellId: null,
+      endingBellId: bells.endingBellId,
       presetId: null,
       presetName: null,
     });
@@ -70,13 +75,14 @@ export function HomeScreen() {
 
   const onTimedConfirm = () => {
     setShowTimedPicker(false);
+    const bells = settings.timedBells;
     navigateToIntention({
       durationSeconds: timedMinutes * 60,
       warmupSeconds: 0,
       intervalSeconds: 0,
-      startingBellId: 'bell_1',
+      startingBellId: bells.startingBellId,
       intervalBellId: null,
-      endingBellId: 'bell_1',
+      endingBellId: bells.endingBellId,
       presetId: null,
       presetName: `${timedMinutes} min`,
     });
@@ -96,11 +102,48 @@ export function HomeScreen() {
     });
   };
 
+  const openBellModal = (mode: 'free' | 'timed') => {
+    setDraftBells(mode === 'free' ? settings.freeBells : settings.timedBells);
+    setShowBellModal(mode);
+  };
+
+  const saveBellSettings = () => {
+    if (showBellModal === 'free') updateSettings({ freeBells: draftBells });
+    else if (showBellModal === 'timed') updateSettings({ timedBells: draftBells });
+    setShowBellModal(null);
+  };
+
   const CARDS = [
-    { icon: '∞',  label: i18n.t('home.freeMeditation'),  desc: i18n.t('session.free'),   onPress: onFree,                              iconSize: 34, iconColor: '#4A80E4' },
-    { icon: '⏱', label: i18n.t('home.timedMeditation'), desc: i18n.t('session.manual'), onPress: onTimed,                             iconSize: 32 },
-    { icon: '◎',  label: i18n.t('home.selectPreset'),    desc: presets.length > 0 ? `${presets.length} presets` : i18n.t('presets.empty'), onPress: () => setShowPresetPicker(true), iconSize: 42 },
-    { icon: '📖', label: i18n.t('home.viewJournal'),     desc: i18n.t('journal.title'),  onPress: () => navigation.getParent()?.navigate('JournalStack') },
+    {
+      icon: '∞',
+      label: i18n.t('home.freeMeditation'),
+      desc: i18n.t('session.free'),
+      onPress: onFree,
+      onSettings: () => openBellModal('free'),
+      iconSize: 34,
+      iconColor: '#4A80E4',
+    },
+    {
+      icon: '⏱',
+      label: i18n.t('home.timedMeditation'),
+      desc: i18n.t('session.manual'),
+      onPress: onTimed,
+      onSettings: () => openBellModal('timed'),
+      iconSize: 32,
+    },
+    {
+      icon: '◎',
+      label: i18n.t('home.selectPreset'),
+      desc: presets.length > 0 ? `${presets.length} presets` : i18n.t('presets.empty'),
+      onPress: () => setShowPresetPicker(true),
+      iconSize: 42,
+    },
+    {
+      icon: '📖',
+      label: i18n.t('home.viewJournal'),
+      desc: i18n.t('journal.title'),
+      onPress: () => navigation.getParent()?.navigate('JournalStack'),
+    },
   ];
 
   return (
@@ -121,7 +164,11 @@ export function HomeScreen() {
 
         {/* Logo */}
         <View style={styles.logoArea}>
-          <Image source={isDark ? require('../../assets/logo-light.png') : require('../../assets/logo.png')} style={{ width: 160, height: 160 }} resizeMode="contain" />
+          <Image
+            source={isDark ? require('../../assets/logo-light.png') : require('../../assets/logo.png')}
+            style={{ width: 160, height: 160 }}
+            resizeMode="contain"
+          />
         </View>
 
         {/* Main options */}
@@ -133,11 +180,22 @@ export function HomeScreen() {
               onPress={card.onPress}
               activeOpacity={0.8}
             >
-              <Text style={[styles.cardIcon, { color: card.iconColor ?? colors.primary, fontSize: card.iconSize ?? 24 }]}>{card.icon}</Text>
+              <Text style={[styles.cardIcon, { color: card.iconColor ?? colors.primary, fontSize: card.iconSize ?? 24 }]}>
+                {card.icon}
+              </Text>
               <View style={styles.cardText}>
                 <ThemedText style={{ fontWeight: '600', fontSize: 16 }}>{card.label}</ThemedText>
                 <ThemedText secondary style={styles.cardDesc}>{card.desc}</ThemedText>
               </View>
+              {'onSettings' in card && (
+                <TouchableOpacity
+                  onPress={card.onSettings}
+                  hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                  style={styles.settingsBtn}
+                >
+                  <Text style={{ color: colors.textSecondary, fontSize: 17 }}>⚙</Text>
+                </TouchableOpacity>
+              )}
             </TouchableOpacity>
           ))}
         </View>
@@ -234,6 +292,53 @@ export function HomeScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Bell settings modal */}
+      <Modal visible={showBellModal !== null} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <ThemedText variant="subtitle" style={styles.modalTitle}>
+              {showBellModal === 'free'
+                ? i18n.t('home.freeMeditation')
+                : i18n.t('home.timedMeditation')}
+            </ThemedText>
+
+            <View style={styles.bellRow}>
+              <ThemedText secondary style={styles.bellLabel}>
+                {i18n.t('presetForm.startingBell')}
+              </ThemedText>
+              <BellSelector
+                selected={draftBells.startingBellId}
+                onChange={id => setDraftBells(prev => ({ ...prev, startingBellId: id }))}
+              />
+            </View>
+
+            <View style={styles.bellRow}>
+              <ThemedText secondary style={styles.bellLabel}>
+                {i18n.t('presetForm.endingBell')}
+              </ThemedText>
+              <BellSelector
+                selected={draftBells.endingBellId}
+                onChange={id => setDraftBells(prev => ({ ...prev, endingBellId: id }))}
+              />
+            </View>
+
+            <View style={styles.modalButtons}>
+              <Button
+                label={i18n.t('common.cancel')}
+                variant="ghost"
+                onPress={() => setShowBellModal(null)}
+                style={{ flex: 1 }}
+              />
+              <Button
+                label={i18n.t('common.save')}
+                onPress={saveBellSettings}
+                style={{ flex: 1 }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </GradientBackground>
   );
 }
@@ -286,6 +391,9 @@ const styles = StyleSheet.create({
   },
   cardDesc: {
     fontSize: 12,
+  },
+  settingsBtn: {
+    padding: 4,
   },
   donationCard: {
     borderRadius: 14,
@@ -341,5 +449,13 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
     gap: 4,
+  },
+  bellRow: {
+    gap: 8,
+  },
+  bellLabel: {
+    fontSize: 13,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
 });

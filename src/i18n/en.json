@@ -135,6 +135,17 @@
     "googleDrive": "Sync with Google Drive",
     "comingSoon": "Coming soon"
   },
+  "stats": {
+    "title": "Stats",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "all": "All",
+    "totalMin": "total min",
+    "avgMin": "avg min",
+    "minutes": "minutes",
+    "noData": "No sessions in this period"
+  },
   "export": {
     "title": "Export Journal",
     "exportTxt": "Export as TXT",
@@ -189,7 +200,7 @@
   },
   "about": {
     "title": "About",
-    "description": "Sama (Simple Meditation Timer) is an ad-free meditation timer with a local journal. No tracking. No internet required.",
+    "description": "Sama (Simple Meditation Timer) is an ad-free meditation timer with a local journal. Export and import your sessions in JSON, XLSX, or TXT format. No tracking. No internet required.",
     "version": "Version",
     "author": "Author",
     "privacyPolicy": "Privacy Policy",

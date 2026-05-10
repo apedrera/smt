@@ -3,16 +3,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SETTINGS_KEY = '@smt_settings';
 
+export interface BellSettings {
+  startingBellId: string | null;
+  endingBellId: string | null;
+}
+
 export interface AppSettings {
   locale: string | null;
   themeMode: 'system' | 'light' | 'dark';
   hasSeenOnboarding: boolean;
+  freeBells: BellSettings;
+  timedBells: BellSettings;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
   locale: null,
   themeMode: 'system',
   hasSeenOnboarding: false,
+  freeBells: { startingBellId: null, endingBellId: null },
+  timedBells: { startingBellId: 'bell_1', endingBellId: 'bell_1' },
 };
 
 export function useSettings() {
