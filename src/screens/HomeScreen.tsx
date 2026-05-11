@@ -139,6 +139,7 @@ export function HomeScreen() {
       label: i18n.t('home.selectPreset'),
       desc: presets.length > 0 ? `${presets.length} presets` : i18n.t('presets.empty'),
       onPress: () => setShowPresetPicker(true),
+      onSettings: () => navigation.getParent()?.navigate('Presets'),
       iconSize: 42,
     },
     {
