@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -91,7 +91,7 @@ function buildChartData(
     bars.push({
       value,
       label,
-      frontColor: value > 0 ? primaryColor : primaryColor + '28',
+      frontColor: value > 0 ? primaryColor : 'transparent',
     });
 
     cursor = cursor.add(1, periodUnit);
@@ -187,6 +187,15 @@ export function StatsScreen() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [range, setRange] = useState<RangeKey>('1m');
   const [gran, setGran] = useState<GranKey>('day');
+  const [scrollX, setScrollX] = useState(0);
+  const [scrollViewW, setScrollViewW] = useState(0);
+  const [scrollContentW, setScrollContentW] = useState(0);
+  const scrollRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ x: 0, animated: false });
+    setScrollX(0);
+  }, [range, gran]);
 
   useFocusEffect(
     useCallback(() => {
@@ -269,32 +278,51 @@ export function StatsScreen() {
               </View>
             ) : (
               <View style={styles.chartWrapper}>
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={{ minWidth: SCREEN_W - 40 }}
-                >
-                  <BarChart
-                    data={bars}
-                    barWidth={barWidth}
-                    spacing={spacing}
-                    noOfSections={4}
-                    maxValue={chartMax}
-                    frontColor={colors.primary}
-                    yAxisThickness={0}
-                    xAxisThickness={StyleSheet.hairlineWidth}
-                    xAxisColor={colors.border}
-                    yAxisTextStyle={{ color: colors.textSecondary, fontSize: 11 }}
-                    xAxisLabelTextStyle={{ color: colors.textSecondary, fontSize: 9 }}
-                    isAnimated
-                    animationDuration={400}
-                    initialSpacing={8}
-                    endSpacing={16}
-                    height={180}
-                    width={Math.max(SCREEN_W - 40, chartContentWidth)}
-                    roundedTop
-                  />
-                </ScrollView>
+                <View>
+                  <ScrollView
+                    ref={scrollRef}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ minWidth: SCREEN_W - 40 }}
+                    onScroll={e => setScrollX(e.nativeEvent.contentOffset.x)}
+                    scrollEventThrottle={16}
+                    onLayout={e => setScrollViewW(e.nativeEvent.layout.width)}
+                    onContentSizeChange={w => setScrollContentW(w)}
+                  >
+                    <BarChart
+                      key={`${range}-${gran}`}
+                      data={bars}
+                      barWidth={barWidth}
+                      spacing={spacing}
+                      noOfSections={4}
+                      maxValue={chartMax}
+                      frontColor={colors.primary}
+                      yAxisThickness={0}
+                      xAxisThickness={StyleSheet.hairlineWidth}
+                      xAxisColor={colors.border}
+                      yAxisTextStyle={{ color: colors.textSecondary, fontSize: 11 }}
+                      xAxisLabelTextStyle={{ color: colors.textSecondary, fontSize: 9 }}
+                      isAnimated
+                      animationDuration={400}
+                      initialSpacing={8}
+                      endSpacing={16}
+                      height={180}
+                      width={Math.max(SCREEN_W - 40, chartContentWidth)}
+                      roundedTop
+                    />
+                  </ScrollView>
+                  {scrollContentW > scrollViewW + 2 && (() => {
+                    const thumbW = Math.max(28, (scrollViewW / scrollContentW) * scrollViewW);
+                    const thumbLeft = scrollContentW > scrollViewW
+                      ? (scrollX / (scrollContentW - scrollViewW)) * (scrollViewW - thumbW)
+                      : 0;
+                    return (
+                      <View style={[styles.scrollTrack, { backgroundColor: colors.border }]}>
+                        <View style={[styles.scrollThumb, { width: thumbW, left: thumbLeft, backgroundColor: colors.primary }]} />
+                      </View>
+                    );
+                  })()}
+                </View>
                 <ThemedText secondary style={styles.yUnit}>
                   {i18n.t('stats.minutes')}
                 </ThemedText>
@@ -352,6 +380,18 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textAlign: 'center',
     marginTop: 4,
+  },
+  scrollTrack: {
+    height: 3,
+    borderRadius: 2,
+    marginTop: 8,
+    marginHorizontal: 4,
+  },
+  scrollThumb: {
+    position: 'absolute',
+    top: 0,
+    height: 3,
+    borderRadius: 2,
   },
   empty: {
     flex: 1,

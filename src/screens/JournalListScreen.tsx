@@ -224,12 +224,19 @@ export function JournalListScreen() {
           </View>
         ) : (
           <>
-            <ThemedText secondary style={styles.count}>
-              {sessions.length}{' '}
-              {sessions.length === 1
-                ? i18n.t('journal.session')
-                : i18n.t('journal.sessions')}
-            </ThemedText>
+            <View style={styles.countRow}>
+              <ThemedText secondary style={styles.count}>
+                {sessions.length}{' '}
+                {sessions.length === 1
+                  ? i18n.t('journal.session')
+                  : i18n.t('journal.sessions')}
+              </ThemedText>
+              <TouchableOpacity onPress={() => navigation.getParent()?.navigate('Stats')}>
+                <ThemedText style={{ fontSize: 13, color: colors.primary }}>
+                  ({i18n.t('journal.seeStats')})
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
             <FlatList
               data={sessions}
               keyExtractor={s => s.id}
@@ -279,9 +286,14 @@ const styles = StyleSheet.create({
     width: 24,
     borderRadius: 2,
   },
+  countRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
   count: {
     fontSize: 13,
-    marginBottom: 12,
   },
   row: {
     flexDirection: 'row',

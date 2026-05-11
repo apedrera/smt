@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import Constants from 'expo-constants';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '@/contexts/AppContext';
 import { GradientBackground } from '@/components/GradientBackground';
 import { ThemedText } from '@/components/ThemedText';
@@ -18,6 +19,7 @@ import { i18n } from '@/i18n';
 export function AboutScreen() {
   const { colors, isDark } = useApp();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const [showPrivacy, setShowPrivacy] = useState(false);
 
@@ -103,7 +105,7 @@ export function AboutScreen() {
                 <ThemedText style={{ color: colors.primary, fontSize: 16 }}>{i18n.t('common.close')}</ThemedText>
               </TouchableOpacity>
             </View>
-            <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
+            <ScrollView style={styles.modalBody} contentContainerStyle={{ paddingBottom: 40 + insets.bottom }} showsVerticalScrollIndicator={false}>
               <ThemedText variant="subtitle" style={styles.ppSection}>{i18n.t('about.pp.s1title')}</ThemedText>
               <ThemedText style={styles.ppText}>{i18n.t('about.pp.s1body')}</ThemedText>
 
@@ -231,7 +233,6 @@ const styles = StyleSheet.create({
   modalBody: {
     paddingHorizontal: 24,
     paddingTop: 20,
-    paddingBottom: 40,
   },
   ppSection: {
     marginTop: 20,

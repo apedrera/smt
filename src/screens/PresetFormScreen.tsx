@@ -8,6 +8,7 @@ import {
   Modal,
   BackHandler,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useApp } from '@/contexts/AppContext';
@@ -32,6 +33,7 @@ type PickerField = 'duration' | 'warmup' | 'interval';
 
 export function PresetFormScreen() {
   const { colors } = useApp();
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<FormNav>();
   const route = useRoute<FormRoute>();
   const { presetId } = route.params ?? {};
@@ -233,7 +235,7 @@ export function PresetFormScreen() {
       {/* Minutes picker modal */}
       <Modal visible={pickerField !== null} transparent animationType="slide">
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalBox, { backgroundColor: colors.surface }]}>
+          <View style={[styles.modalBox, { backgroundColor: colors.surface, paddingBottom: 24 + insets.bottom }]}>
             <ThemedText variant="subtitle" style={styles.modalTitle}>
               {pickerTitle}
             </ThemedText>

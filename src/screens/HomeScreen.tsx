@@ -8,6 +8,7 @@ import {
   Text,
   Image,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GradientBackground } from '@/components/GradientBackground';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -29,6 +30,8 @@ const MINUTES = Array.from({ length: 121 }, (_, i) => i);
 export function HomeScreen() {
   const { colors, isDark, settings, updateSettings } = useApp();
   const navigation = useNavigation<HomeNav>();
+  const insets = useSafeAreaInsets();
+  const modalPaddingBottom = 24 + insets.bottom;
   const [showTimedPicker, setShowTimedPicker] = useState(false);
   const [timedMinutes, setTimedMinutes] = useState(20);
   const [showPresetPicker, setShowPresetPicker] = useState(false);
@@ -218,7 +221,7 @@ export function HomeScreen() {
       {/* Timed picker modal */}
       <Modal visible={showTimedPicker} transparent animationType="slide">
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface, paddingBottom: modalPaddingBottom }]}>
             <ThemedText variant="subtitle" style={styles.modalTitle}>
               {i18n.t('home.timedMeditation')}
             </ThemedText>
@@ -248,7 +251,7 @@ export function HomeScreen() {
       {/* Preset picker modal */}
       <Modal visible={showPresetPicker} transparent animationType="slide">
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface, paddingBottom: modalPaddingBottom }]}>
             <ThemedText variant="subtitle" style={styles.modalTitle}>
               {i18n.t('home.selectPreset')}
             </ThemedText>
@@ -296,7 +299,7 @@ export function HomeScreen() {
       {/* Bell settings modal */}
       <Modal visible={showBellModal !== null} transparent animationType="slide">
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface, paddingBottom: modalPaddingBottom }]}>
             <ThemedText variant="subtitle" style={styles.modalTitle}>
               {showBellModal === 'free'
                 ? i18n.t('home.freeMeditation')

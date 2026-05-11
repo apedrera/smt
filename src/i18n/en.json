@@ -73,7 +73,8 @@
     "sessions": "sessions",
     "noIntention": "",
     "min": "min",
-    "sec": "sec"
+    "sec": "sec",
+    "seeStats": "see statistics"
   },
   "journalDetail": {
     "title": "Session Detail",
